@@ -20,3 +20,6 @@ docker/mysql/dbdata/*
 # System Files
 .DS_Store
 Thumbs.db
+
+# Zscaler certificate
+docker/backend/cacert.cer

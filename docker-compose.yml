@@ -15,6 +15,7 @@ services:
       - ./docker/backend/supervisor/supervisord.conf:/etc/supervisord.conf
       - ./docker/backend/php.ini:/usr/local/etc/php/conf.d/local.ini
       - ./docker/backend/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#      - ./docker/backend/cacert.cer:/usr/local/etc/ssl/certs/cacert.cer
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:

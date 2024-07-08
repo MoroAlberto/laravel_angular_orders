@@ -30,8 +30,8 @@ RUN apt-get update && apt-get install -y \
     supervisor
 
 # xdebug
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+#RUN pecl install xdebug \
+#    && docker-php-ext-enable xdebug
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -42,7 +42,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
 
 # Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Create system user to run Composer
+RUN mkdir -p /home/www/.composer
 
 # create dir for supervisor
 RUN mkdir -p /var/log/supervisor \
