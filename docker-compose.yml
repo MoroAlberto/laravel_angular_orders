@@ -1,0 +1,110 @@
+services:
+
+  # PHP Service
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+    container_name: "${PROJECT_NAME}_backend"
+    tty: true
+    environment:
+      SERVICE_NAME: backend
+    working_dir: /var/www/backend
+    volumes:
+      - ./backend/:/var/www/backend
+      - ./docker/backend/supervisor/supervisord.conf:/etc/supervisord.conf
+      - ./docker/backend/php.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./docker/backend/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - private
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    container_name: "${PROJECT_NAME}_frontend"
+    working_dir: /usr/src/app
+    volumes:
+      - ./frontend/:/usr/src/app
+    ports:
+      - '4200:4200'
+    command: >
+      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
+    user: node
+    networks:
+      - private
+
+  # Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: "${PROJECT_NAME}_webserver"
+    tty: true
+    ports:
+      - "8000:80"
+      - "443:443"
+    volumes:
+      - ./backend/:/var/www/backend
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - private
+
+  # MySQL Service
+  mysql:
+    image: mysql:latest
+    container_name: "${PROJECT_NAME}_mysql"
+    tty: true
+    environment:
+      MYSQL_USER: ${USER_MYSQL}
+      MYSQL_PASSWORD: ${PASS_MYSQL}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_ROOT_PASSWORD: ${PASS_ROOT_MYSQL}
+      MYSQL_ROOT_HOST: '%'
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker/mysql/dbdata/:/var/lib/mysql/
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - private
+
+  # MailPit Service
+  mailer:
+    image: axllent/mailpit
+    container_name: "${PROJECT_NAME}_mail"
+    restart: unless-stopped
+    volumes:
+      - ./docker/mail/:/data
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks:
+      - private
+
+  # PHPMYADMIN Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "${PROJECT_NAME}_phpmyadmin"
+    ports:
+      - "7000:80"
+    links:
+      - mysql:mysql
+    environment:
+      MYSQL_USER: ${USER_MYSQL}
+      MYSQL_PASSWORD: ${PASS_MYSQL}
+      MYSQL_ROOT_PASSWORD: ${PASS_ROOT_MYSQL}
+      MYSQL_ROOT_HOST: '%'
+      PMA_HOST: mysql
+    networks:
+      - private
+
+# Docker Networks
+networks:
+  private:
+    driver: bridge
