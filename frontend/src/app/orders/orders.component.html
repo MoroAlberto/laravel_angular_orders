@@ -1,0 +1,91 @@
+<clr-main-container>
+  <div class="content-container">
+    <div class="content-area">
+      <p>
+        <button class="btn btn-primary" (click)="openToAdd()">New Order</button>
+      </p>
+
+      <clr-modal [(clrModalOpen)]="showOrderModal">
+        <h3 class="modal-title">{{ orderModalTitle }}</h3>
+        <div class="modal-body">
+          <form clrForm [formGroup]="orderForm">
+
+            <clr-input-container>
+              <label>Name</label>
+              <input clrInput placeholder="Insert name"  type="text" formControlName="name"/>
+              <clr-control-helper></clr-control-helper>
+              <clr-control-error>Name is required.</clr-control-error>
+            </clr-input-container>
+
+            <clr-input-container>
+              <label>Description</label>
+              <input clrInput placeholder="Insert description" type="text" formControlName="description"/>
+              <clr-control-helper></clr-control-helper>
+              <clr-control-error>Description is required.</clr-control-error>
+            </clr-input-container>
+
+            <clr-date-container>
+              <label>Date</label>
+              <input autocomplete="off" clrDate type="date" formControlName="date" placeholder="Filter by Date"/>
+              <clr-control-helper></clr-control-helper>
+              <clr-control-error>Date is required.</clr-control-error>
+            </clr-date-container>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="showOrderModal = false">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="saveOrUpdateOrder()">Save</button>
+        </div>
+      </clr-modal>
+
+      <clr-modal [(clrModalOpen)]="showRemoveModal">
+        <h3 class="modal-title">Confirm Removal</h3>
+        <div class="modal-body">
+          {{ removeModalText }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger-outline btn-sm" (click)="showRemoveModal = false">Cancel</button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="deleteOrder()">Remove</button>
+        </div>
+      </clr-modal>
+
+      <div>
+        <clr-input-container>
+          <label>Search by:</label>
+          <input clrInput placeholder="Name or Description" name="name" [(ngModel)]="search"/>
+        </clr-input-container>
+        <clr-date-container>
+          <label>Date</label>
+          <input type="date" autocomplete="off" clrDate name="date" placeholder="Filter by Date" [(ngModel)]="date"/>
+        </clr-date-container>
+        <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply Filters</button>
+        <button type="button" class="btn btn-warning" (click)="clearFilters()">Remove Filters</button>
+      </div>
+
+      <clr-datagrid>
+        <clr-dg-column>Order ID</clr-dg-column>
+        <clr-dg-column [clrDgField]="'name'" [clrDgSortOrder]="descSort">Name</clr-dg-column>
+        <clr-dg-column [clrDgField]="'description'">Description</clr-dg-column>
+        <clr-dg-column>Date</clr-dg-column>
+
+        <clr-dg-row *clrDgItems="let order of orders">
+          <clr-dg-action-overflow>
+            <button class="action-item" (click)="openToEdit(order)">Edit</button>
+            <button class="action-item" (click)="openToRemove(order)">Delete</button>
+          </clr-dg-action-overflow>
+          <clr-dg-cell>{{ order.id }}</clr-dg-cell>
+          <clr-dg-cell>{{ order.name }}</clr-dg-cell>
+          <clr-dg-cell>{{ order.description }}</clr-dg-cell>
+          <clr-dg-cell>{{ order.date | date:'MM/dd/yyyy' }}</clr-dg-cell>
+        </clr-dg-row>
+
+        <clr-dg-footer>
+          <clr-dg-pagination #pagination [clrDgPageSize]="10">
+            <clr-dg-page-size [clrPageSizeOptions]="[10, 20, 50, 100]">Orders per page</clr-dg-page-size>
+            {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of {{ pagination.totalItems }} orders
+          </clr-dg-pagination>
+        </clr-dg-footer>
+      </clr-datagrid>
+    </div>
+  </div>
+</clr-main-container>
