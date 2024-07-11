@@ -3,33 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\Product;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $orders = Order::with('products')->when(request('search'), function($query) {
-            return $query->where('name', 'like', '%'.request('search').'%')
-                ->orWhere('description', 'like', '%'.request('search').'%');
-        })->when(request('date'), function($query) {
-            return $query->whereDate('date', request('date'));
-        })->get();
+    protected OrderService $orderService;
 
-        return response()->json($orders);
+    public function __construct(OrderService $orderService)
+    {
+        $this->orderService = $orderService;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index(Request $request)
     {
-        //
+        $orders = $this->orderService->getAllOrders($request->search, $request->date);
+        return response()->json($orders);
     }
 
     /**
@@ -38,7 +31,7 @@ class OrderController extends Controller
     public function store(OrderRequest $request)
     {
         $validated = $request->validated();
-        $order = Order::create($validated);
+        $order = $this->orderService->storeOrder($validated);
         return response()->json($order, 201);
     }
 
@@ -51,20 +44,12 @@ class OrderController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(OrderRequest $request, Order $order)
     {
         $validated = $request->validated();
-        $order->update($validated);
+        $order = $this->orderService->updateOrder($order, $validated);
         return response()->json($order, 200);
     }
 
@@ -73,8 +58,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        $order->delete();
-
+        $this->orderService->deleteOrder($order);
         return response()->json(null, 204);
     }
 }

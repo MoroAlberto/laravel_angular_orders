@@ -14,6 +14,10 @@ class Product extends Model
         'price',
     ];
 
+    protected $casts = [
+        'price' => 'float',
+    ];
+
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_product');

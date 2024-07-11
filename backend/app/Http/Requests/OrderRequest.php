@@ -25,7 +25,7 @@ class OrderRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'date' => 'required|date',
+            'date' => 'required|date:Y-m-d',
         ];
     }
 }

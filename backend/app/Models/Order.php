@@ -14,6 +14,11 @@ class Order extends Model
         'description',
         'date'
     ];
+
+    protected $casts = [
+        'date' => 'date:Y-m-d',
+    ];
+
     public function products()
     {
         return $this->belongsToMany(Product::class, 'order_product');

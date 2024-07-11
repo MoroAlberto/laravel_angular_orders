@@ -1,11 +1,9 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Models;
 
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Order;
 use App\Models\Product;
@@ -14,8 +12,7 @@ class OrderProductTest extends TestCase
 {
     use RefreshDatabase;
 
-    #[Test]
-    public function it_creates_orders_and_products_and_associates_them()
+    public function test_it_creates_orders_and_products_and_associates_them()
     {
         // Run the seeder
         $this->seed(DatabaseSeeder::class);
@@ -33,8 +30,7 @@ class OrderProductTest extends TestCase
         });
     }
 
-    #[Test]
-    public function it_creates_orders_with_specific_data()
+    public function test_it_creates_orders_with_specific_data()
     {
         // Create an order with specific data
         $order = Order::factory()->create([
@@ -51,8 +47,7 @@ class OrderProductTest extends TestCase
         ]);
     }
 
-    #[Test]
-    public function it_creates_products_with_specific_data()
+    public function test_it_creates_products_with_specific_data()
     {
         // Create a product with specific data
         $product = Product::factory()->create([
@@ -67,8 +62,7 @@ class OrderProductTest extends TestCase
         ]);
     }
 
-    #[Test]
-    public function it_associates_products_to_orders()
+    public function test_it_associates_products_to_orders()
     {
         // Create an order
         $order = Order::factory()->create();

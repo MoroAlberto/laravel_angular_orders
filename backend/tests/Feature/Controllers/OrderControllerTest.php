@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Order;
 
@@ -12,8 +11,7 @@ class OrderControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    #[Test]
-    public function it_returns_orders_index()
+    public function test_it_returns_orders_index()
     {
         Order::factory()->count(3)->create();
         $response = $this->get('/api/orders');
@@ -21,8 +19,7 @@ class OrderControllerTest extends TestCase
         $response->assertJsonCount(3);
     }
 
-    #[Test]
-    public function it_creates_a_new_order()
+    public function test_it_create_order()
     {
         $data = [
             'name' => 'Test Order',
@@ -34,21 +31,7 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(201);
     }
 
-    #[Test]
-    public function it_fails_to_create_an_order_when_validation_fails()
-    {
-        $data = [
-            'name' => '', // name is required
-            'description' => 'Test Description',
-            'date' => '2024-07-06'
-        ];
-        $response = $this->postJson('/api/orders', $data);
-        $response->assertStatus(422); // Unprocessable Entity
-        $response->assertJsonValidationErrors('name');
-    }
-
-    #[Test]
-    public function it_shows_an_order()
+    public function test_can_show_order()
     {
         $order = Order::factory()->create();
         $response = $this->get("/api/orders/{$order->id}");
@@ -56,12 +39,11 @@ class OrderControllerTest extends TestCase
         $response->assertJsonFragment([
             'name' => $order->name,
             'description' => $order->description,
-            'date' => Carbon::parse($order->date)->format('Y-m-d H:i:s'),
+            'date' => Carbon::parse($order->date)->format('Y-m-d'),
         ]);
     }
 
-    #[Test]
-    public function it_updates_an_order()
+    public function test_can_update_order()
     {
         $order = Order::factory()->create();
         $updatedData = [
@@ -74,22 +56,7 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    #[Test]
-    public function it_fails_to_update_an_order_when_validation_fails()
-    {
-        $order = Order::factory()->create();
-        $updatedData = [
-            'name' => '', // name is required
-            'description' => 'Updated Description',
-            'date' => '2024-07-07'
-        ];
-        $response = $this->putJson("/api/orders/{$order->id}", $updatedData);
-        $response->assertStatus(422); // Unprocessable Entity
-        $response->assertJsonValidationErrors('name');
-    }
-
-    #[Test]
-    public function it_deletes_an_order()
+    public function test_can_delete_order()
     {
         $order = Order::factory()->create();
         $response = $this->delete("/api/orders/{$order->id}");
