@@ -1,10 +1,11 @@
-# Dockerized stack for Laravel 11 + Angular 18 + MySQL
+# Dockerized stack for Laravel 11 + Angular 17 + MySQL
 
 Based on: https://github.com/ucrem/docker-laravel-angular public template
 
 A just installed **backend** container with:
 * Laravel 11 
 * PHP 8.3
+* Angular 17 + Clarity
 * Supervisor with php command artisan queue:work
 * OPTIONAL: Zscaler certificate
 
