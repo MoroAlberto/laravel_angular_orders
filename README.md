@@ -90,10 +90,18 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
-
 For the backend it is not necessary to execute the command php artisan because the nginx container is linked on the public laraver folder
 
 As for the frontend (Angular) I made sure to expose the 4200, in this way you edit the file locally but links it on the docker instantly and angular cli does the rest on the docker.
+
+If Angular doesn't start, try to:
+```sh
+docker exec -it local_frontend /bin/bash
+```
+then
+```sh
+npm start
+```
 
 So here are the links currently configured:
 
