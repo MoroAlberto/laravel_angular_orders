@@ -18,6 +18,11 @@ class Product extends Model
         'price' => 'float',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_product');

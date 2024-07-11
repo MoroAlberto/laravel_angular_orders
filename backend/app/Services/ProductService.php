@@ -2,12 +2,13 @@
 
 namespace App\Services;
 
+use App\Interfaces\ProductServiceInterface;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 
-class ProductService
+class ProductService implements ProductServiceInterface
 {
-    public function getAllProducts($search = null): Collection|array
+    public function getAllProducts($search = null, $date = null): Collection|array
     {
         $query = Product::query();
 

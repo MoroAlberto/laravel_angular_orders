@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Interfaces\OrderServiceInterface;
 use App\Models\Order;
+use Illuminate\Database\Eloquent\Collection;
 
-class OrderService
+class OrderService implements OrderServiceInterface
 {
-    public function getAllOrders($search, $date)
+    public function getAllOrders($search = null, $date = null): Collection|array
     {
         $query = Order::with('products');
 

@@ -19,6 +19,11 @@ class Order extends Model
         'date' => 'date:Y-m-d',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
     public function products()
     {
         return $this->belongsToMany(Product::class, 'order_product');
