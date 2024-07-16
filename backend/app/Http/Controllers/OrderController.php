@@ -9,11 +9,8 @@ use App\Models\Order;
 
 class OrderController extends Controller
 {
-    protected OrderService $orderService;
-
-    public function __construct(OrderService $orderService)
+    public function __construct(protected OrderService $orderService)
     {
-        $this->orderService = $orderService;
     }
 
     /**
