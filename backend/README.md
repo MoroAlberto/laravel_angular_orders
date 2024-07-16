@@ -1,12 +1,13 @@
 # Laravel API
 
-This Laravel API project provides endpoints for managing orders and products. 
+This Laravel API project provides endpoints for managing orders and products.
 
 ## Setup
 
 ### Using Docker
 
-For detailed instructions on setting up Docker, please refer to the separate Docker README file included in this repository
+For detailed instructions on setting up Docker, please refer to the separate Docker README file included in this
+repository
 
 ## Routes
 
@@ -33,7 +34,9 @@ The project includes PHPUnit tests for API endpoints and services. Run the tests
 ```bash
 docker exec -it local_backend vendor/bin/phpunit
 ```
+
 OR
+
 ```bash
 docker exec -it local_backend /bin/bash
 php artisan test
@@ -41,4 +44,5 @@ php artisan test
 
 ## Frontend
 
-This repository contains the backend API only. For the frontend implementation using Angular, please refer to the separate Angular repository or documentation.
+This repository contains the backend API only. For the frontend implementation using Angular, please refer to the
+separate Angular repository or documentation.

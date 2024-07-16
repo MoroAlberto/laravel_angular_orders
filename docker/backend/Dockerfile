@@ -29,10 +29,6 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     supervisor
 
-# xdebug
-#RUN pecl install xdebug \
-#    && docker-php-ext-enable xdebug
-
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -52,6 +48,10 @@ RUN mkdir -p /var/log/supervisor \
 
 #RUN mkdir /var/log/supervisord
 COPY ./docker/backend/supervisor/supervisord.conf /etc/supervisord.conf
+
+# xdebug
+#RUN pear config-set http_proxy http://localhost:9000/
+#RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 # Add user for laravel application
 RUN groupadd -g 1000 www

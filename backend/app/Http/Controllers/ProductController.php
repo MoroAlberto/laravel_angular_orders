@@ -5,20 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Services\ProductService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     protected ProductService $productService;
 
-    public function __construct(ProductService  $productService)
+    public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
     }
+
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $products = $this->productService->getAllProducts($request->search);
         return response()->json($products);
@@ -27,7 +29,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductRequest $request)
+    public function store(ProductRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $product = $this->productService->storeProduct($validated);
@@ -37,7 +39,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(Product $product): JsonResponse
     {
         return response()->json($product);
     }
@@ -45,7 +47,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, Product $product)
+    public function update(ProductRequest $request, Product $product): JsonResponse
     {
         $validated = $request->validated();
         $product = $this->productService->updateProduct($product, $validated);
@@ -55,7 +57,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product): JsonResponse
     {
         $this->productService->deleteProduct($product);
         return response()->json(null, 204);

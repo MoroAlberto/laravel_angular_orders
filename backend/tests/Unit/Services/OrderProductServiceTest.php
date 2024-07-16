@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Services\OrderProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use InvalidArgumentException;
 use Tests\TestCase;
 
 class OrderProductServiceTest extends TestCase
@@ -35,7 +36,7 @@ class OrderProductServiceTest extends TestCase
 
     public function test_attach_product_to_order_that_does_not_exist()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $order = new Order(); // Create a new, non-existing order
         $product = Product::factory()->create();
@@ -45,7 +46,7 @@ class OrderProductServiceTest extends TestCase
 
     public function test_attach_non_existing_product_to_order()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $order = Order::factory()->create();
         $product = new Product(); // Create a new, non-existing product
